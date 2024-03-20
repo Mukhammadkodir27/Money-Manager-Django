@@ -1,1 +1,2 @@
 # Money-Manager-Django
+# * added.
