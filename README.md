@@ -1,0 +1,2 @@
+# Django App
+Money Manager
