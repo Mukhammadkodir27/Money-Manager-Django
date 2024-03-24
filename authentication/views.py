@@ -12,9 +12,8 @@ class UsernameValidationView(View):
 
         if not str(username).isalnum():
             return JsonResponse({"username_error": "username must only contain alphanumeric characters"}, status=400)
-        elif User.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists():
             return JsonResponse({"username_error": "Sorry! this username already exists"}, status=409)
-
         return JsonResponse({"username_valid": True})
 
 
