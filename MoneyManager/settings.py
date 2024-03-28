@@ -66,7 +66,13 @@ WSGI_APPLICATION = "MoneyManager.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "moneymanagerdb",
+        "USER": "postgres",
+        "PASSWORD": "Shakhkamoli02#",
+        "HOST": "localhost",
+    }
 }
 
 
@@ -122,4 +128,10 @@ MESSAGE_TAGS = {
 
 
 # ! email stuff
-
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = "mypythonproject27@gmail.com"
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = "mypythonproject27@gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_PASSWORD = "ttyg wyik tifd sufu"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

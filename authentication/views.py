@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 import json
 from django.http import JsonResponse
@@ -10,6 +10,10 @@ from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.conf import settings
+from django.contrib import auth
+from django.urls import reverse
+from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
+from .utils import token_generator
 
 
 class EmailValidationView(View):
@@ -35,6 +39,7 @@ class UsernameValidationView(View):
         return JsonResponse({"username_valid": True})
 
 
+# ! email and registration part
 class RegistrationView(View):
     def get(self, request):
         return render(request, "authentication/register.html")
@@ -43,6 +48,7 @@ class RegistrationView(View):
         # GET USER DATA
         # VALIDATE
         # CREATE A USER ACCOUNT
+        # ! registration part
         username = request.POST["username"]
         email = request.POST["email"]
         password = request.POST["password"]
@@ -56,13 +62,28 @@ class RegistrationView(View):
                 if len(password) < 6:
                     messages.error(request, "Password too short")
                     return render(request, "authentication/register.html", context)
-
+                # ! email part
                 user = User.objects.create_user(username=username, email=email)
                 user.set_password(password)
                 user.is_active = False
                 user.save()
+
+                # * path to view
+                # * getting domain we are on
+                # * relative url to verification
+                # * encode uid
+                # * token
+
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                domain = get_current_site(request).domain
+                link = reverse("activate", kwargs={
+                    "uidb64": uidb64, "token": token_generator.make_token(user)
+                })
+
+                activate_link = "https://"+domain+link
+
                 email_subject = "Activate your account"
-                email_body = "Test Body"
+                email_body = f"Hi {user.username}. \n Please use this link to verify your account!\n {activate_link}"
                 email = EmailMessage(
                     email_subject,
                     email_body,
@@ -74,3 +95,8 @@ class RegistrationView(View):
                 return render(request, "authentication/register.html")
 
         return render(request, "authentication/register.html")
+
+
+class VerificationView(View):
+    def get(self, request, uidb64, token):
+        return redirect("login")
