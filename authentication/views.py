@@ -101,3 +101,5 @@ class RegistrationView(View):
 class VerificationView(View):
     def get(self, request, uidb64, token):
         return redirect("login")
+
+# to be addeddddd
