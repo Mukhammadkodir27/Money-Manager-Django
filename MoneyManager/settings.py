@@ -66,13 +66,7 @@ WSGI_APPLICATION = "MoneyManager.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "moneymanagerdb",
-        "USER": "postgres",
-        "PASSWORD": "Shakhkamoli02#",
-        "HOST": "localhost",
-    }
+
 }
 
 
