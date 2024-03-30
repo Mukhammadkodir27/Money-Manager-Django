@@ -15,6 +15,7 @@ from django.urls import reverse
 # ? from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
 from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
 from .utils import token_generator
+from django.utils.encoding import force_str
 
 
 class EmailValidationView(View):
@@ -100,6 +101,27 @@ class RegistrationView(View):
 
 class VerificationView(View):
     def get(self, request, uidb64, token):
+        try:
+            # ! fixed force_text to force_str as it has been removed from later Django Versions
+            id = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=id)
+
+            if not token_generator.check_token(user, token):
+                return redirect("login"+"?message"+"User already activated")
+
+            if user.is_active:
+                return redirect("login")
+            user.is_active = True
+            user.save()
+
+            messages.success(request, "Account activated successfully")
+            return redirect("login")
+
+        except Exception as ex:
+            pass
         return redirect("login")
 
-# to be addeddddd
+
+class LoginView(View):
+    def get(self, request):
+        return render(request, "authentication/login.html")
