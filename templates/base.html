@@ -25,8 +25,11 @@
         aria-label="Search"
       />
       <ul class="navbar-nav px-3">
-        <li class="nav-item text-nowrap">
-          <a class="nav-link" href="#">Sign out</a>
+        <li class="nav-item text-nowrap">     
+          <form action="{% url "logout" %}" method="POST">
+            {% csrf_token %}
+            <input class="text text-capitalize" type="submit" value="Log out"/>
+         </form>
         </li>
       </ul>
     </nav>
