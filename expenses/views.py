@@ -8,7 +8,11 @@ from django.contrib import messages
 @login_required(login_url="/authentication/login")
 def index(request):
     categories = Category.objects.all()
-    return render(request, "expenses/index.html")
+    expenses = Expense.objects.filter(owner=request.user)
+    context = {
+        "expenses": expenses
+    }
+    return render(request, "expenses/index.html", context)
 
 
 def add_expense(request):
@@ -41,3 +45,41 @@ def add_expense(request):
         messages.success(request, "Expense Saved Successfully :)")
 
         return redirect("expenses")
+
+
+def expense_edit(request, id):
+    expense = Expense.objects.get(pk=id)
+    categories = Category.objects.all()
+    context = {
+        "expense": expense,
+        "values": expense,
+        "categories": categories,
+    }
+    if request.method == "GET":
+        return render(request, "expenses/edit-expense.html", context)
+    if request.method == "POST":
+        amount = request.POST["amount"]
+        if not amount:
+            messages.error(request, "Amount is required!")
+            return render(request, "expenses/edit-expense.html", context)
+
+        # description, date, category
+        description = request.POST["description"]
+        date = request.POST["expense_date"]
+        category = request.POST["category"]
+        if not description:
+            messages.error(request, "Description is required!")
+            return render(request, "expenses/edit-expense.html", context)
+
+        expense.owner = request.user
+        expense.amount = amount
+        expense.date = date
+        expense.category = category
+        expense.description = description
+
+        expense.save()
+        messages.success(request, "Expense Updated Successfully :)")
+        return redirect("expenses")
+
+        # messages.info(request, "Handling post form")
+        # return render(request, "expenses/edit-expense.html", context)
