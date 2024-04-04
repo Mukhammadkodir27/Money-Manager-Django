@@ -83,3 +83,10 @@ def expense_edit(request, id):
 
         # messages.info(request, "Handling post form")
         # return render(request, "expenses/edit-expense.html", context)
+
+
+def delete_expense(request, id):
+    expense = Expense.objects.get(pk=id)
+    expense.delete()
+    messages.success(request, "Expense removed!")
+    return redirect("expenses")
