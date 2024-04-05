@@ -1,0 +1,36 @@
+#header {
+  background: rgb(124, 76, 252);
+  color: #ffffff;
+}
+
+#head {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 28px;
+}
+
+#branding h1 {
+  color: #ffffff;
+}
+
+div.breadcrumbs {
+  background: rgb(106, 61, 61);
+  color: #ffffff;
+}
+
+/* !  had to change padding: from 0 to -2 */
+.login .submit-row {
+  padding: -2px !important;
+}
+
+input[type="submit"],
+input[type="button"],
+.submit-row input {
+  width: 100%;
+  background: rgb(124, 76, 252);
+}
+
+.module h2,
+.module caption,
+.inline-group h2 {
+  background: rgb(124, 76, 252);
+}
