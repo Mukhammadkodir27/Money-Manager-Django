@@ -9,3 +9,6 @@ username success!
 
 email success!
 ![image](https://github.com/Mukhammadkodir27/Money-Manager-Django/assets/99057791/1e2b5205-bcd1-42d7-898d-0b0f0ace3983)
+
+added Income Admin style, previous version was for Expense, but modified to income as well
+![image](https://github.com/Mukhammadkodir27/Money-Manager-Django/assets/99057791/05f17d60-ecb0-4d68-b0f1-44f1f454129e)
