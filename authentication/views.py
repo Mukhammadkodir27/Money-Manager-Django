@@ -184,13 +184,13 @@ class RequestPasswordResetEmail(View):
             reset_link = "http://"+domain+link
             email_subject = "Password reset instructions"
             email_body = f"Hi {user[0].username}. \n Please use this link to reset your password!\n {reset_link}"
-            email = EmailMessage(
+            email_message = EmailMessage(
                 email_subject,
                 email_body,
                 "noreply@semicolon.com",
                 [email],
             )
-            email.send(fail_silently=False)
+            email_message.send(fail_silently=False)
         messages.success(
             request, "We have sent you an email to reset your password")
 
@@ -242,9 +242,9 @@ class CompletePasswordReset(View):
 
             messages.success(
                 request, "Password reset successfull, you can login with your new password")
+            return redirect("login")
         except Exception as identifier:
             messages.info(
                 request, "Something went wrong, try again!")
             return render(request, "authentication/set-new-password.html", context)
-
         return redirect("login")
