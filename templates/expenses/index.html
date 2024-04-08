@@ -16,15 +16,19 @@
       </nav>
     </div>
     <div class="col-md-2">
-      <a href="{% url 'add-expenses'%}" class="btn btn-primary">Add Expense</a>
+      <a href="{% url "add-expenses" %}" class="btn btn-primary">Add Expense</a>
     </div>
   </div>
 
   <div class="container">
-    {% include 'partials/_messages.html' %} {% if expenses.count %}
+    {% include "partials/_messages.html" %} {% if expenses.count %}
     <div class="row">
       <div class="col-md-8"></div>
       <div class="col-md-4">
+        <!-- Export Excel html -->
+        <a href="{% url "export-excel" %}" class="btn btn-primary">Export Excel</a>
+        <!-- Export CSV html -->
+        <a href="{% url "export-csv" %}" class="btn btn-secondary">Export CSV</a>
         <div class="form-group">
           <input type="text" class="form-control" id="searchField" placeholder="Search">
         </div>
@@ -49,7 +53,7 @@
         <td>{{expense.description}}</td>
         <td>{{expense.date}}</td>
         <td>
-          <a href="{% url 'expense-edit' expense.id  %}" class="btn btn-secondary btn-sm">Edit</a>
+          <a href="{% url "expense-edit" expense.id  %}" class="btn btn-secondary btn-sm">Edit</a>
         </td>
       </tr>
       {% endfor %}
@@ -94,6 +98,6 @@
 </div>
 </div>
 
-<script src="{% static 'js/searchExpenses.js' %}"></script>
+<script src="{% static "js/searchExpenses.js" %}"></script>
 
 {% endblock content %}

@@ -48,10 +48,6 @@ class RegistrationView(View):
         return render(request, "authentication/register.html")
 
     def post(self, request):
-        # GET USER DATA
-        # VALIDATE
-        # CREATE A USER ACCOUNT
-        # ! registration part
         username = request.POST["username"]
         email = request.POST["email"]
         password = request.POST["password"]
@@ -70,32 +66,51 @@ class RegistrationView(View):
                 user.set_password(password)
                 user.is_active = False
                 user.save()
+                current_site = get_current_site(request)
 
-                # * path to view
-                # * getting domain we are on
-                # * relative url to verification
-                # * encode uid
-                # * token
+                email_body = {
+                    'user': user,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': token_generator.make_token(user),
+                }
 
-                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-                domain = get_current_site(request).domain
-                link = reverse("activate", kwargs={
-                    "uidb64": uidb64, "token": token_generator.make_token(user)
-                })
+                link = reverse('activate', kwargs={
+                               'uidb64': email_body['uid'], 'token': email_body['token']})
 
-                activate_link = "https://"+domain+link
+                email_subject = 'Activate your account'
 
-                email_subject = "Activate your account"
-                email_body = f"Hi {user.username}. \n Please use this link to verify your account!\n {activate_link}"
+                activate_url = 'http://'+current_site.domain+link
+
                 email = EmailMessage(
                     email_subject,
-                    email_body,
-                    "noreply@semicolon.com",
+                    'Hi '+user.username + ', Please the link below to activate your account \n'+activate_url,
+                    'noreply@semycolon.com',
                     [email],
                 )
                 email.send(fail_silently=False)
-                messages.success(request, "Account successfully created")
-                return render(request, "authentication/register.html")
+                messages.success(request, 'Account successfully created')
+                return render(request, 'authentication/register.html')
+
+                # uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                # domain = get_current_site(request).domain
+                # link = reverse("activate", kwargs={
+                #     "uidb64": uidb64, "token": token_generator.make_token(user)
+                # })
+
+                # activate_link = "http://"+domain+link
+
+                # email_subject = "Activate your account"
+                # email_body = f"Hi {user.username}. \n Please use this link to verify your account!\n {activate_link}"
+                # email_message = EmailMessage(
+                #     email_subject,
+                #     email_body,
+                #     "noreply@semicolon.com",
+                #     [email],
+                # )
+                # email_message.send(fail_silently=False)
+                # messages.success(request, "Account successfully created")
+                # return render(request, "authentication/register.html")
 
         return render(request, "authentication/register.html")
 
@@ -242,7 +257,7 @@ class CompletePasswordReset(View):
 
             messages.success(
                 request, "Password reset successfull, you can login with your new password")
-            return redirect("login")
+            # return redirect("login")
         except Exception as identifier:
             messages.info(
                 request, "Something went wrong, try again!")
