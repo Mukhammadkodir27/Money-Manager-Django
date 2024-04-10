@@ -145,3 +145,6 @@ def income_source_summary(request):
 
 def income_stats_view(request):
     return render(request, 'income/income-stats.html')
+
+
+###
