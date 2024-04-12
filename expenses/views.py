@@ -10,6 +10,7 @@ from userpreferences.models import UserPreference
 import datetime
 import csv
 import xlwt
+from datetime import timedelta
 
 
 def search_expenses(request):
@@ -205,3 +206,21 @@ def export_excel(request):
 
     wb.save(response)
     return response
+
+
+# new added
+# def expense_total_summary(request):
+#     todays_date = datetime.now().date()
+#     six_months_ago = todays_date - timedelta(days=180)
+#     expenses = Expense.objects.filter(
+#         user=request.user, date__gte=six_months_ago, date__lte=todays_date)
+
+#     category_totals = {}
+
+#     for expense in expenses:
+#         if expense.category.name in category_totals:
+#             category_totals[expense.category.name] += expense.amount
+#         else:
+#             category_totals[expense.category.name] = expense.amount
+
+#     return JsonResponse({'expense_total_data': category_totals})

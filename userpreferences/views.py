@@ -5,6 +5,9 @@ import json
 from django.conf import settings
 from .models import UserPreference
 from django.contrib import messages
+from django.views import View
+from django.contrib.auth import logout
+from django.http import HttpResponse
 
 
 @login_required
@@ -43,3 +46,18 @@ def index(request):
 
         # Redirect to avoid double POST on refresh
         return render(request, "preferences/index.html", {"currencies": currency_data, "user_preferences": user_preferences})
+
+
+def account(request):
+    return render(request, "preferences/useraccount.html")
+
+
+def delete_user(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()  # This deletes the user
+        logout(request)  # This logs out the user
+        # Redirect to the homepage or a page indicating successful deletion
+        return redirect('login')
+    else:
+        return HttpResponse("Not allowed", status=405)

@@ -14,5 +14,5 @@ urlpatterns = [
     path("set-new-password/<uidb64>/<token>",
          CompletePasswordReset.as_view(), name="reset-user-password"),
     path("request-reset-link", RequestPasswordResetEmail.as_view(),
-         name="request-password")
+         name="request-password"),
 ]
